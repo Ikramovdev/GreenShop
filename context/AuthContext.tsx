@@ -8,7 +8,7 @@ interface ContextType {
 
 export const Context = createContext<ContextType>({
     token: null,
-    setToken: () => {},
+    setToken: () => { },
 });
 
 export const AuthContext: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -17,7 +17,7 @@ export const AuthContext: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (token) {
             localStorage.setItem("token", token);
         } else {
-            localStorage.removeItem("token"); 
+            localStorage.removeItem("token");
         }
     }, [token]);
 

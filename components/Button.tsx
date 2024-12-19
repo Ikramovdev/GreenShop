@@ -5,7 +5,7 @@ import React, { ReactNode } from 'react'
 
 interface ButtonType {
   leftIcon?: ReactNode
-  title: string
+  title?: string
   rightIcon?: ReactNode
   extraClass?: string
   onclick?: () => void

@@ -36,7 +36,6 @@ export default function RootLayout({
           <AuthContext>
             <Header />
             {children}
-         
             <Footer />
           </AuthContext>
         </ReactQueryProvider>

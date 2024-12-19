@@ -10,7 +10,7 @@ import RegisterInputs from './RegisterInputs/Index'
 import VerifyRegister from './RegisterInputs/VerifyRegister'
 import ForgotPassword from './ForgotPassword/Index'
 import ResetPassword from './resetPassword/Index'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Context } from '@/context/AuthContext'
 
 interface navbarType {
@@ -20,6 +20,7 @@ interface navbarType {
 }
 const Header = () => {
     const path = usePathname()
+    const router = useRouter()
     const navbarList: navbarType[] = [
         {
             id: "1",
@@ -42,10 +43,11 @@ const Header = () => {
             path: "/blogs"
         }
     ]
+    const [userName, setUserName] = useState<string>("")
     // modal 
     const [registerEmail, setRegisterEmail] = useState<string>("")
     const [loginModal, setLoginModal] = useState<boolean>(false)
-    const {setToken} = useContext(Context)
+    const { setToken, token } = useContext(Context)
     const [isLogin, setIsLogin] = useState<"login" | "register" | "verify_register" | "forgotPassword" | "reset_password">("login")
     function loginSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -56,7 +58,7 @@ const Header = () => {
             }
             instance().post("/login", data).then((res) => {
                 setLoginModal(false)
-                setToken(res.data.access.token)
+                setToken(res.data.access_token)
             })
         }
         else if (isLogin == "register") {
@@ -69,6 +71,7 @@ const Header = () => {
             if ((e.target as HTMLFormElement).password.value == (e.target as HTMLFormElement).confirm_password.value) {
                 instance().post("/register", data).then(() => {
                     setRegisterEmail(data.email)
+                    setUserName(data.lastName)
                     setIsLogin("verify_register")
                 })
             }
@@ -105,8 +108,10 @@ const Header = () => {
             })
         }
     }
-    console.log(path);
-    
+
+
+    // saved liked list 
+    // saved liked list 
     return (
         <header>
             <div className='w-[1200px] mx-auto mt-[25px] pb-[20px] flex items-center justify-between border-b-[1px] border-[#46A35880]'>
@@ -124,11 +129,11 @@ const Header = () => {
                     </ul>
                     <div className='flex items-center gap-[30px]'>
                         <div className='cursor-pointer'><SearchIcon /></div>
-                        <div className='w-[30px] relative cursor-pointer'>
+                        <button onClick={() => router.push("/shop/shopping-cart")} className='w-[30px] relative cursor-pointer'>
                             <div className='relative'><BasketIcon /></div>
                             <strong className='absolute top-[2px] right-[2px] w-[12px] h-[12px] rounded-full bg-[#46A358] px-[4px] font-medium text-[10px] text-white leading-[12px] flex justify-center '>0</strong>
-                        </div>
-                        <Button onclick={() => setLoginModal(true)} type='button' leftIcon={<LogAutIcon />} title={'Login'} />
+                        </button>
+                        <Button onclick={() => setLoginModal(true)} type='button' extraClass={`${token ? "bg-yellow-500" : "bg-[#46A358]"}`} leftIcon={token ? "" : <LogAutIcon />} title={`${token ? userName ? userName: registerEmail : "Login"}`} />
                     </div>
                 </div>
             </div>

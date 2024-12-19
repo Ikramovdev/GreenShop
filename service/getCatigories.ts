@@ -1,19 +1,18 @@
 "use client"
 import { instance } from "@/hook/instance";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 
 export interface CategoryType {
     category_id: string | null;
-    category_name: string | null;
+    category_name: string;
 }
 
-
 export const getCategories = () => {
-    useEffect(() => {
-        instance().get("/categories", { params: { page: 1, limit: 100 } })
-        .then(res => 
-            console.log(res.data)
-        )
-}, [])
+    const params: { page: number, limit: number } = { page: 1, limit: 100 }
+    const { data = [] } = useQuery({
+        queryKey: ["categories"],
+        queryFn: () => instance().get("/categories", { params }).then(res => res.data?.categories)
+    })
+    return data
 }

@@ -6,6 +6,7 @@ import { getProducts, ProductsType } from "@/service/getProducts";
 import ProductsCard from "@/components/ProductsCard";
 import { useState } from "react";
 import { Pagination } from "@nextui-org/pagination";
+import BlogSection from "@/components/BlogSection";
 
 export default function Home() {
   const [categoryName, setCategoryName] = useState<string | null>(null)
@@ -14,8 +15,8 @@ export default function Home() {
   const [page, setPage] = useState<number | null>(1)
   const [totalPage, setTotalPage] = useState<number>(10)
 
-  const products:ProductsType[]  = getProducts(categoryName, tags, page, setTotalPage)
-  
+  const products: ProductsType[] = getProducts(categoryName, tags, page, setTotalPage)
+
   return (
     <main>
       <section className="mt-[12px] mb-[46px]">
@@ -30,26 +31,29 @@ export default function Home() {
         </div>
       </section>
       <section>
-        <div className="w-[1200px] mx-auto mt-[26px] mb-[94px]">
-          <ul className="w-[20%] p-5 space-y-5">
-            {[{ categoryName: "all", category_id: null }, ...categories]?.map((item:any | CategoryType) => <li key={item.category_id} onClick={() => setCategoryName(item.category_name)}>{item.category_name}</li>)}
-          </ul>
-          <div className="w-[80%]">
+        <div className="w-[1200px] mx-auto mt-[26px] mb-[94px] flex justify-between">
+          <div className="w-[20%] p-5 bg-[#FBFBFB] h-[100vh]">
+            <ul className="space-y-5 mb-[10px]">
+              {[{ categoryName: "all", category_id: null }, ...categories]?.map((item: any | CategoryType) => <li key={item.category_id} onClick={() => setCategoryName(item.category_name)}>{item.category_name}</li>)}
+            </ul>
+            <Image className="w-[400px] h-[370]" src='/images/SaleBanner.png' alt="SaleBanner" priority width={370} height={370} />
+          </div>
+          <div className="w-[78%] flex flex-col">
             <ul className="flex items-center gap-10">
               <li onClick={() => setTags(null)} className={`font-regular text-[15px] leading-[16px] text-[#3D3D3D] cursor-pointer ${tags == null && 'text-green-500 border-b-[2px] border-[#46A358] duration-300 pb-[7px]'} `}>All Plants</li>
               <li onClick={() => setTags('new_arrivals')} className={`font-regular text-[15px] leading-[16px] text-[#3D3D3D] cursor-pointer ${tags == 'new_arrivals' && 'text-green-500 border-b-[2px] border-[#46A358] duration-300 pb-[7px]'} `}>New Arrivals</li>
               <li onClick={() => setTags('sale')} className={`font-regular text-[15px] leading-[16px] text-[#3D3D3D] cursor-pointer ${tags == 'sale' && 'text-green-500 border-b-[2px] border-[#46A358] duration-300 pb-[7px]'} `}>Sale</li>
             </ul>
-            <div className="flex items-center flex-wrap gap-5">
-              {products ?  products?.map((item: ProductsType) => <ProductsCard key={item.product_id} item={item} />) : <Image src={"/images/noImage.jpg"} alt="NoImage" width={260} height={260} priority />}
+            <div className="flex items-center gap-[18px] flex-wrap mt-[31px]">
+              {products ? products?.map((item: ProductsType) => <ProductsCard key={item.product_id} item={item} />) : <Image src={"/images/noImage.jpg"} alt="NoImage" width={260} height={260} priority />}
             </div>
             <div className="flex justify-end py-10">
-              <Pagination onClick={(e) => setPage(1)} color="success" total={totalPage / 6} initialPage={page ? page : 1} size="lg" />
+              <Pagination onClick={(e) => setPage(1 )} color="success" total={totalPage / 6} initialPage={page ? page : 1} size="lg" />
             </div>
           </div>
         </div>
       </section>
-      <BlogSection/>
+      <BlogSection />
     </main>
   )
 }
